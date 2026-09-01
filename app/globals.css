@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --color-void: #0b0e14;
+  --color-surface: #11151f;
+  --color-surface-raised: #171c28;
+  --color-line: #232a38;
+  --color-text: #e7eaf0;
+  --color-text-dim: #8891a1;
+  --color-text-faint: #5b6472;
+  --color-signal: #4fd8c4;
+  --color-signal-dim: #2f7d72;
+  --color-amber: #f5a623;
+  --color-danger: #ef5b5b;
+}
+
+@theme inline {
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-text);
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), sans-serif;
+}
+
+.font-mono-ui {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Signature: sequential packet-pulse used for connection status */
+@keyframes packet-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.packet-dot {
+  animation: packet-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rise-in {
+  animation: rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .packet-dot, .rise-in {
+    animation: none !important;
+  }
+}
