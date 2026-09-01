@@ -9,7 +9,6 @@ pipeline {
     stages {
         stage('1. Checkout Code') {
             steps {
-                // Récupération du code depuis GitHub
                 checkout scm
             }
         }
@@ -17,8 +16,8 @@ pipeline {
         stage('2. Build Image Docker') {
             steps {
                 script {
-                    // Build de l'image Docker de l'application
-                    sh "docker build -t ${APP_NAME}:latest ."
+                    // Utilisation de bat à la place de sh pour Windows
+                    bat "docker build -t ${APP_NAME}:latest ."
                 }
             }
         }
@@ -26,12 +25,10 @@ pipeline {
         stage('3. Deploy Container') {
             steps {
                 script {
-                    // Arrêt et suppression de l'ancien conteneur s'il existe
-                    sh "docker stop ${APP_NAME} || true"
-                    sh "docker rm ${APP_NAME} || true"
-                    
-                    // Lancement du nouveau conteneur
-                    sh "docker run -d --name ${APP_NAME} -p ${PORT}:3000 --restart always ${APP_NAME}:latest"
+                    // Arrêt et relance du conteneur en batch Windows
+                    bat "docker stop ${APP_NAME} || exit 0"
+                    bat "docker rm ${APP_NAME} || exit 0"
+                    bat "docker run -d --name ${APP_NAME} -p ${PORT}:3000 --restart always ${APP_NAME}:latest"
                 }
             }
         }
@@ -39,11 +36,11 @@ pipeline {
 
     post {
         always {
-            // Nettoyage des images temporaires/inutilisées
-            sh "docker image prune -f"
+            // Nettoyage des images Docker obsolètes
+            bat "docker image prune -f"
         }
         success {
-            echo "Déploiement réussi ! L'application tourne sur le port 3000."
+            echo "Déploiement réussi !"
         }
         failure {
             echo "Échec du déploiement."
