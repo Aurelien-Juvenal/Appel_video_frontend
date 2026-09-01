@@ -4,8 +4,9 @@ pipeline {
     environment {
         APP_NAME = 'nextjs-appel-video'
         PORT = '3000'
-        // Ajout du dossier binaire de Docker Desktop au PATH du pipeline
         PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+        // Forcer une version d'API Docker rétrocompatible
+        DOCKER_API_VERSION = '1.43'
     }
 
     stages {
@@ -37,12 +38,6 @@ pipeline {
     post {
         always {
             bat "docker image prune -f || exit 0"
-        }
-        success {
-            echo "Déploiement réussi !"
-        }
-        failure {
-            echo "Échec du déploiement."
         }
     }
 }
