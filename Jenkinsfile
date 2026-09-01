@@ -4,6 +4,8 @@ pipeline {
     environment {
         APP_NAME = 'nextjs-appel-video'
         PORT = '3000'
+        // Ajout du dossier binaire de Docker Desktop au PATH du pipeline
+        PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
     }
 
     stages {
@@ -16,7 +18,6 @@ pipeline {
         stage('2. Build Image Docker') {
             steps {
                 script {
-                    // Utilisation de bat à la place de sh pour Windows
                     bat "docker build -t ${APP_NAME}:latest ."
                 }
             }
@@ -25,7 +26,6 @@ pipeline {
         stage('3. Deploy Container') {
             steps {
                 script {
-                    // Arrêt et relance du conteneur en batch Windows
                     bat "docker stop ${APP_NAME} || exit 0"
                     bat "docker rm ${APP_NAME} || exit 0"
                     bat "docker run -d --name ${APP_NAME} -p ${PORT}:3000 --restart always ${APP_NAME}:latest"
@@ -36,8 +36,7 @@ pipeline {
 
     post {
         always {
-            // Nettoyage des images Docker obsolètes
-            bat "docker image prune -f"
+            bat "docker image prune -f || exit 0"
         }
         success {
             echo "Déploiement réussi !"
