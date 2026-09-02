@@ -1,5 +1,6 @@
 # Phase 1: Installation des dépendances et Build
-FROM node:18-alpine AS builder
+# Remplacer node:18-alpine par node:20-alpine
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
@@ -8,8 +9,8 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Phase 2: Execution de l'application
-FROM node:18-alpine AS runner
+# Remplacer node:18-alpine par node:20-alpine
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 ENV NODE_ENV production
